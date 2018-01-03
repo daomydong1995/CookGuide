@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">FoodGuide</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_category">CategoryActivity</string>
+    <string name="notification_empty">Kết nối không thành công \n Có thể tín hiệu mạng không tốt \n hoặc hệ thống đang bận xử lý!</string>
+    <string name="notification_empty_recipes">Hiện tại không có dữ liệu \n Chúng tôi đang cập nhật dữ liệu \n cảm ơn bạn đã ghé thăm!</string>
+    <string name="title_activity_recipes_detail">RecipesDetailActivity</string>
+    <string name="title_activity_location_detail">LocationDetailActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_search_restaurant_result">Kết quả tìm kiếm địa điểm</string>
+    <string name="title_activity_search_recipes_result">Kết quả tìm kiếm công thức</string>
+    <string name="title_activity_favorite">Địa điểm ưa thích</string>
+    <string name="title_activity_calendar">Lịch nấu ăn</string>
+    <string name="action_today">Today</string>
+    <string name="action_day_view">Day view</string>
+    <string name="action_three_day_view">3 day view</string>
+    <string name="action_week_view">Week view</string>
+    <string name="favorite">Favorite</string>
+    <string name="search">Search</string>
+    <string name="calendar">Calendar</string>
+    <string name="share">Share</string>
+    <string name="facebook_app_id">135726300455707</string>
+    <string name="title_activity_help">Hướng dẫn</string>
+    <string name="title_activity_favourite_recipes">Công thức ưa thích</string>
+    <string name="help">Help</string>
+    <string name="tgcb">"Thời gian chế biến "</string>
+    <string name="phut">" phút"</string>
+    <string name="nguoidung">" người dùng"</string>
+</resources>

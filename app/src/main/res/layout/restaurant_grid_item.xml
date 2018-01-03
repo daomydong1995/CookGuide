@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/actionBar">
+
+    <ImageView
+        android:layout_width="190dp"
+        android:layout_height="120dp"
+        android:id="@+id/imageRestaurant"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/textNameRestaurant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageRestaurant"
+        android:text="aaa"
+        android:textSize="16sp"
+        android:layout_marginLeft="5dp"
+        android:textStyle="bold"/>
+
+</RelativeLayout>

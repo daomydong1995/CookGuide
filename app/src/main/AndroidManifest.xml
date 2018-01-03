@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.daomy.foodguide.activity">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="com.example.daomy.foodguide.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.example.daomy.foodguide.permission.C2D_MESSAGE" />
+    <application
+        android:name=".FoodGuide"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/MyAppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="com.parse.PushService" />
+        <receiver android:name="com.parse.ParseBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.example.daomy.foodguide" />
+            </intent-filter>
+        </receiver>
+
+        <!-- replace @drawable/push_icon with your push icon identifier -->
+        <meta-data android:name="com.parse.push.notification_icon"
+            android:resource="@mipmap/ic_launcher"/>
+
+        <activity
+            android:name=".CategoryActivity"
+            android:label="@string/title_activity_category"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".RecipesDetailActivity"
+            android:label="@string/title_activity_recipes_detail"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".RestaurantDetailActivity"
+            android:label="@string/title_activity_location_detail"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SearchActivity"
+            android:label="@string/title_activity_search"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SearchRestaurantResultActivity"
+            android:label="@string/title_activity_search_restaurant_result"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SearchRecipesResultActivity"
+            android:label="@string/title_activity_search_recipes_result"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".FavouriteRestaurantActivity"
+            android:label="@string/title_activity_favorite"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".FavouriteRecipesActivity"
+            android:label="@string/title_activity_favourite_recipes"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".CalendarActivity"
+            android:label="@string/title_activity_calendar"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/title_activity_help"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"/>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider135726300455707"
+            android:exported="true" />
+
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+    </application>
+
+</manifest>

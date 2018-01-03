@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:id="@+id/imageRecipes"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="3dp"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/textNameRecipes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageRecipes"
+        android:layout_alignTop="@+id/imageRecipes"
+        android:layout_alignLeft="@+id/imageRecipes"
+        android:layout_alignRight="@+id/imageRecipes"
+        android:text="Mi hoang thanh sot nam"
+        android:gravity="center"
+        android:layout_marginTop="130dp"
+        android:textSize="20sp"
+        android:background="#80000000"
+        android:textColor="#ffffff"/>
+
+</RelativeLayout>

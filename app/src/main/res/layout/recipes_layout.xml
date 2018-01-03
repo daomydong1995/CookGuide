@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#C8E6C9">
+
+
+
+    <RelativeLayout
+        android:id="@+id/gridRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#C8E6C9">
+
+        <GridView
+            android:id="@+id/gvMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="2">
+
+        </GridView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/footerMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/pink_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_icon="@mipmap/ic_action_favorite"
+            fab:fab_colorNormal="@color/background_floating_button"
+            fab:fab_colorPressed="@color/background_floating_button_pressed"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

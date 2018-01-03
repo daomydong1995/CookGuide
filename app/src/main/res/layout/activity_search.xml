@@ -1,0 +1,249 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/searchCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingTop="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nhập thông tin cần tìm kiếm:"
+            android:id="@+id/tvThongtin"
+            android:textColor="@color/title_recipes"
+            android:textSize="18sp"
+            android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvThongtin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/icon_restaurant_pressed"
+                android:layout_marginRight="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvMonAn"
+                android:text="Tên món ăn:"
+                android:textSize="16sp"/>
+
+
+            <view
+                android:id="@+id/editSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                class="com.example.daomy.foodguide.ultil.SelectionEnabledEditText"
+                android:hint="Nhập tên món..."
+                android:textSize="14sp"
+                android:layout_centerVertical="true"
+                android:singleLine="true"
+                android:textColor="#000000"/>
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/layoutRestaurant"
+        android:layout_below="@+id/searchCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="invisible">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/icon_location"
+                android:layout_marginRight="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Nơi ở (Quận): "
+                android:textSize="16sp"/>
+
+            <view
+                android:id="@+id/edtSearchDistrict"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Nhập quận..."
+                android:textSize="14sp"
+                class="com.example.daomy.foodguide.ultil.SelectionEnabledEditText"
+                android:singleLine="true"
+                android:textColor="#000000"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/icon_prices"
+                android:layout_marginRight="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giá cả: "
+                android:textSize="16sp"
+                android:layout_marginRight="5dp"/>
+
+            <view
+                android:id="@+id/edtSearchPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Nhập giá..."
+                android:numeric="decimal"
+                android:textSize="14sp"
+                class="com.example.daomy.foodguide.ultil.SelectionEnabledEditText"
+                android:singleLine="true"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Lưu ý: Thông tin nơi ở và giá cả có thể bỏ trống."
+                android:textColor="@android:color/holo_red_light"/>
+
+            <ImageView
+                android:id="@+id/btnRestaurants"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/icon_search"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:layout_below="@+id/searchCategory"
+        android:id="@+id/layoutRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/icon_time"
+                android:layout_marginRight="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thời gian chế biến (phút): "
+                android:textSize="16sp"/>
+
+            <view
+                android:id="@+id/edtSearchTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Nhập phút.."
+                android:numeric="decimal"
+                android:textSize="14sp"
+                class="com.example.daomy.foodguide.ultil.SelectionEnabledEditText"
+                android:singleLine="true"
+                android:textColor="#000000"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/icon_serving"
+                android:layout_marginRight="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số người dùng: "
+                android:textSize="16sp"/>
+
+            <view
+                android:id="@+id/edtSearchServing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Nhập số người..."
+                android:numeric="decimal"
+                android:textSize="14sp"
+                class="com.example.daomy.foodguide.ultil.SelectionEnabledEditText"
+                android:singleLine="true"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Lưu ý: Thông tin thời gian chế biến và số người có thể bỏ trống."
+                android:textColor="@android:color/holo_red_light"
+                android:layout_marginRight="10dp"
+                android:paddingRight="30dp"/>
+
+            <ImageView
+                android:id="@+id/btnRecipes"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/icon_search"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+
+
+</RelativeLayout>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/layoutTop"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/avatar"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingTop="30dp">
+
+                <TextView
+                    android:id="@+id/textTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toRightOf="@+id/avatar"
+                    android:text="Mi Vit Tiem Hai Ky"
+                    android:textColor="@color/title_recipes"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textTitle"
+                    android:layout_toRightOf="@+id/avatar"
+                    android:text="349 - 351 Nguyen Trai, P.7, Q.5, Tp.HCM"
+                    android:textColor="@color/tv_recipes"
+                    android:textSize="14sp"
+
+                    />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutThongTin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutTop">
+
+
+            <android.support.v7.widget.CardView
+
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutTop"
+                android:layout_margin="10dp"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="5dp">
+
+                <LinearLayout
+
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="5dp">
+
+                        <ImageView
+                            android:id="@+id/opentime"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@mipmap/icon_open_time" />
+
+                        <TextView
+                            android:id="@+id/textOpenTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="5dp"
+                            android:text="7:00AM - 10:00PM"
+                            android:textColor="@color/tv_recipes" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="5dp">
+
+                        <ImageView
+                            android:id="@+id/price"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@mipmap/icon_prices" />
+
+                        <TextView
+                            android:id="@+id/textPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="5dp"
+                            android:text="30:000 - 50:000"
+                            android:textColor="@color/tv_recipes" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="5dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingBottom="5dp"
+                            android:layout_alignParentLeft="true">
+
+                        <ImageView
+                            android:id="@+id/phonenumber"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@mipmap/icon_phone" />
+
+                        <TextView
+                            android:id="@+id/textPhoneNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="5dp"
+                            android:text="01284894173"
+                            android:textColor="@color/tv_recipes"
+                            android:layout_gravity="center_vertical"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/btnSaveContact"
+                            android:src="@mipmap/save_contact"
+                            android:layout_alignParentRight="true"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutBanDo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutThongTin">
+
+            <android.support.v7.widget.CardView
+
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutThongTin"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bản đồ"
+                        android:textColor="@color/title_recipes"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/map"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="10dp" />
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+            <!-- Layout Cac Mon An Khac -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Các món khác"
+                    android:textColor="@color/title_recipes"
+                    android:textSize="20sp"/>
+
+                <org.lucasr.twowayview.TwoWayView
+                    android:id="@+id/lvItems"
+                    android:paddingTop="10dp"
+                    style="@style/TwoWayView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="false"
+                    android:paddingBottom="10dp"/>
+
+            </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/footerMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnFavorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            fab:fab_colorNormal="@color/background_floating_button"
+            fab:fab_colorPressed="@color/background_floating_button_pressed"
+            fab:fab_icon="@mipmap/ic_action_favorite" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
