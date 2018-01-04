@@ -1,17 +1,13 @@
 package com.example.daomy.foodguide.activity;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -45,6 +40,7 @@ import com.google.android.gms.common.api.zza;
 import com.google.android.gms.common.api.zze;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.PlusShare;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -66,9 +62,10 @@ import com.example.daomy.foodguide.ultil.ControllerDatabase;
 
 public class RecipesDetailActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
     Recipes mRecipes, mRecipesMore;
-    String ingredients, cacBuocThucHien;
-    ImageView imageOnTop, btnCalendar;
+    String ingredients, cacBuocThucHien,codeYoutube="";
+    ImageView imageOnTop, btnCalendar,imgPlay;
     TextView tvTime, tvServing, tvKcal;
+
     LinearLayout layoutNguyenLieu, layoutHuongDan;
     com.example.daomy.foodguide.model.Calendar mCalendar;
     ControllerDatabase db;
@@ -162,7 +159,7 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
             mRecipesMore.setKcal(c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_KCAL)));
             mRecipesMore.setIngredients(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_INGREDIENTS)));
             mRecipesMore.setInstruction(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_INSTRUCTION)));
-
+            mRecipesMore.setmCodeVideo(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_CODE_YOUTUBE)));
             mList.add(mRecipesMore);
             c.moveToNext();
         }
@@ -198,6 +195,13 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
                 }
             }
         });
+        imgPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(YouTubeStandalonePlayer.createVideoIntent(RecipesDetailActivity.this,
+                        R.string.DEVELOPER_KEY+"",codeYoutube, 0, true, true));
+            }
+        });
 
     }
 
@@ -205,6 +209,7 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
         layoutNguyenLieu = (LinearLayout) findViewById(R.id.NguyenLieuLayout);
         layoutHuongDan = (LinearLayout) findViewById(R.id.HuongDanLayout);
         imageOnTop = (ImageView) findViewById(R.id.imageRecipes);
+        imgPlay = (ImageView) findViewById(R.id.imagePlay);
         tvTime = (TextView) findViewById(R.id.tvTime);
         tvServing = (TextView) findViewById(R.id.tvServing);
         tvKcal = (TextView) findViewById(R.id.tvKcal);
@@ -219,7 +224,7 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
         tvTime.setText(getFormatTime(recipes.getTime()));
         tvServing.setText(recipes.getServing() + " người");
         tvKcal.setText(recipes.getKcal() + " kcal");
-
+        codeYoutube = recipes.getmCodeVideo()+"";
         getSupportActionBar().setTitle(recipes.getName());
 
 
@@ -235,6 +240,7 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
                 .fit()
                 .transform(transformation)
                 .into(imageOnTop);
+
 
 
         String a[] = ingredients.split(",");

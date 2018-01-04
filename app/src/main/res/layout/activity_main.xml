@@ -9,22 +9,21 @@
         android:id="@+id/action_favorite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@mipmap/favorite1" />
+        android:src="@mipmap/favorite1" android:contentDescription="TODO" />
 
     <RelativeLayout
         android:id="@+id/gridCategory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/action_favorite"
-        android:background="#C8E6C9">
+        android:background="#a38cf5">
 
 
         <ListView
             android:id="@+id/gvMain"
+            style="@android:style/Widget.ListView"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent">
-
-        </ListView>
+            android:layout_height="wrap_content" />
 
 
 
@@ -41,15 +40,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/notification_empty" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-
-            </LinearLayout>
 
 
         </LinearLayout>

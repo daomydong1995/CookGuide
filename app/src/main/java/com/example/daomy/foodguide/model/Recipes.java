@@ -14,11 +14,12 @@ public class Recipes implements Serializable {
     private int mKcal;
     private String mIngredients;
     private String mInstruction;
+    private String mCodeVideo;
 
     public Recipes() {
     }
 
-    public Recipes(int id, String name, String image, int time, int serving, int kcal, String ingredients, String instruction) {
+    public Recipes(int id, String name, String image, int time, int serving, int kcal, String ingredients, String instruction,String codevideo ) {
         mId = id;
         mName = name;
         mImage = image;
@@ -27,6 +28,16 @@ public class Recipes implements Serializable {
         mKcal = kcal;
         mIngredients = ingredients;
         mInstruction = instruction;
+        mCodeVideo = codevideo;
+
+    }
+
+    public String getmCodeVideo() {
+        return mCodeVideo;
+    }
+
+    public void setmCodeVideo(String mCodeVideo) {
+        this.mCodeVideo = mCodeVideo;
     }
 
     public String getName() {

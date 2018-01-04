@@ -20,15 +20,39 @@
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content">
-                    <ImageView
+                    <FrameLayout
+                        android:foregroundGravity="center"
                         android:layout_width="200dp"
                         android:layout_height="200dp"
-                        android:id="@+id/imageRecipes"
-                        android:paddingTop="10dp"
-                        android:paddingLeft="10dp" />
+                        >
+
+                        <ImageView
+                            android:layout_margin="6dp"
+                            android:id="@+id/imageRecipes"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_gravity="center"
+                            card_view:srcCompat="@android:drawable/sym_def_app_icon" />
+
+                        <ImageView
+                            android:id="@+id/imagePlay"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="6dp"
+                            android:background="#1c1a1a1a"
+                            android:gravity="center"
+                            android:scaleType="centerInside"
+                            android:text="TextView"
+                            card_view:srcCompat="@android:drawable/ic_media_play" />
+
+                    </FrameLayout>
+
 
 
                     <!-- Layout Thong Tin-->
+
+
 
                     <RelativeLayout
                         android:id="@+id/layoutThongTin"
@@ -127,7 +151,8 @@
 
 
                     </RelativeLayout>
-                    </RelativeLayout>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

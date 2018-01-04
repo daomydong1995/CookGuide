@@ -61,7 +61,8 @@ public class ControllerDatabase {
                 + ContractsDatabase.KEY_RECIPES_SERVING + ", "
                 + ContractsDatabase.KEY_RECIPES_KCAL + ", "
                 + ContractsDatabase.KEY_RECIPES_INGREDIENTS + ", "
-                + ContractsDatabase.KEY_RECIPES_INSTRUCTION
+                + ContractsDatabase.KEY_RECIPES_INSTRUCTION+ ", "
+                + ContractsDatabase.KEY_RECIPES_CODE_YOUTUBE
                 + " FROM " + ContractsDatabase.TABLE_RECIPES
                 + " WHERE " + ContractsDatabase.KEY_RECIPES_ID_CATEGORY + " = \"" + category + "\"";
         Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);

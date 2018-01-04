@@ -1,6 +1,7 @@
 package com.example.daomy.foodguide.activity;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
+import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("WrongViewCast")
     private void loadComponents() {
         mListView = (ListView) findViewById(R.id.gvMain);
         mMessage = (LinearLayout) findViewById(android.R.id.empty);
@@ -305,8 +307,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Thoát").setCancelable(false).setMessage("Bạn có muốn thoát ứng dụng?")
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Thoát").setMessage("Bạn có muốn thoát ứng dụng?")
                     .setNegativeButton("Không", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

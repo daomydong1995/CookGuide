@@ -92,9 +92,9 @@ public class FavouriteRecipesActivity extends AppCompatActivity {
             int kcal = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_KCAL));
             String ingredients = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_INGREDIENTS));
             String instruction = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_INSTRUCTION));
+            String code = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_CODE_YOUTUBE));
 
-
-            mRecipes = new Recipes(id, name, image, time, serving, kcal, ingredients, instruction);
+            mRecipes = new Recipes(id, name, image, time, serving, kcal, ingredients, instruction,code);
         }
 
         Intent intent = new Intent(FavouriteRecipesActivity.this, RecipesDetailActivity.class);

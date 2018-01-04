@@ -8,6 +8,7 @@ public class ContractsDatabase {
     // -------------Table Recipes---------------
     public static final String TABLE_RECIPES = "Recipes";
     // Recipes columns names
+
     public static final String KEY_RECIPES_ID = "idRecipes";
     public static final String KEY_RECIPES_NAME = "name";
     public static final String KEY_RECIPES_TAGNAME = "tagName";
@@ -18,7 +19,7 @@ public class ContractsDatabase {
     public static final String KEY_RECIPES_INGREDIENTS = "ingredients";
     public static final String KEY_RECIPES_INSTRUCTION = "instruction";
     public static final String KEY_RECIPES_ID_CATEGORY = "idCategory";
-
+    public static final String KEY_RECIPES_CODE_YOUTUBE = "codeYoutube";
     // ------------Table Restaurant-------------
     public static final String TABLE_RESTAURANT = "Restaurant";
     // Restaurant columns names

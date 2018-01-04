@@ -95,9 +95,9 @@ public class SearchRecipesResultActivity extends AppCompatActivity {
             int kcal = c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_KCAL));
             String ingredients = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_INGREDIENTS));
             String instruction = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_INSTRUCTION));
+            String code = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_CODE_YOUTUBE));
 
-
-            mRecipes = new Recipes(idR, name, image, time, serving, kcal, ingredients, instruction);
+            mRecipes = new Recipes(idR, name, image, time, serving, kcal, ingredients, instruction,code);
         }
 
         Intent intent = new Intent(this, RecipesDetailActivity.class);
