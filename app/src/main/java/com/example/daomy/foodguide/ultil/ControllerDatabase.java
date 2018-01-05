@@ -6,7 +6,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.daomy.foodguide.api.APIClient;
+import com.example.daomy.foodguide.api.APIService;
+import com.example.daomy.foodguide.model.Categories;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by PDNghiaDev on 4/15/2015.
@@ -15,13 +25,16 @@ public class ControllerDatabase {
     private Context mContext;
     private Database mDatabase;
     private SQLiteDatabase mSQLiteDatabase;
-
+    List<Categories> categories;
+    APIService service ;
     public ControllerDatabase(Context context) {
         mContext = context;
     }
 
     public ControllerDatabase open() {
         mDatabase = new Database(mContext);
+        categories = new ArrayList<>();
+        service = APIClient.getClient().create(APIService.class);
         try {
             mDatabase.CopyDataBaseFromAsset();
             //mDatabase.openDatabase();
@@ -38,17 +51,26 @@ public class ControllerDatabase {
         mDatabase.close();
     }
 
-    // Lấy danh mục món ăn dựa theo buổi
-    public Cursor getCategoriesByDay(String day) {
-        String sql = "SELECT " + ContractsDatabase.KEY_CATEGORY_ID + ", " + ContractsDatabase.KEY_CATEGORY_NAME + ", " + ContractsDatabase.KEY_CATEGORY_IMAGE +
-                " FROM " + ContractsDatabase.TABLE_CATEGORIES + " WHERE " +
-                ContractsDatabase.KEY_CATEGORY_ID + " IN (SELECT "
-                + ContractsDatabase.KEY_LINKED_ID_CATEGORY + " FROM "
-                + ContractsDatabase.TABLE_LINKED + " WHERE "
-                + ContractsDatabase.KEY_LINKED_ID_DAY + " = \"" + day + "\")";
-        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
-        return cursor;
-        // ORDER BY RANDOM() LIMIT 4
+    public List<Categories> getCategoriesByDay(String day) {
+        Call<List<Categories>> listCall = service.getCateByDay(day);
+        listCall.enqueue(new Callback<List<Categories>>() {
+            @Override
+            public void onResponse(Call<List<Categories>> call, Response<List<Categories>> response) {
+                if(response.code() == 200){
+                    categories = response.body();
+                    for(Categories c:categories)
+                        Log.d("Requas",c.getName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Categories>> call, Throwable t) {
+
+            }
+        });
+        for(Categories c:categories)
+            Log.d("Requas",c.getName());
+        return categories;
     }
 
     // Lấy danh sách công thức món ăn theo món ăn

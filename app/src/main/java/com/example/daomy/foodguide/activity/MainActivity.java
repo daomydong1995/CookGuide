@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ControllerDatabase db;
     private Categories mCategories;
-    private ArrayList<Categories> mListCategories = new ArrayList<Categories>();
+    private ArrayList<Categories> mListCategories = new ArrayList<>();
     private MainAdapter mAdapter;
 
     private String day;
@@ -178,9 +178,9 @@ public class MainActivity extends AppCompatActivity {
         if (hourOfDay <= 10) {
             day = "s";
         } else if (hourOfDay <= 14) {
-            day = "t";
+            day = "tr";
         } else {
-            day = "to";
+            day = "t";
         }
     }
 
@@ -255,6 +255,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
 
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -278,18 +280,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             mMessage.setVisibility(View.INVISIBLE);
-            Cursor cursor = db.getCategoriesByDay(day);
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                String id = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_CATEGORY_ID));
-                String name = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_CATEGORY_NAME));
-                String image = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_CATEGORY_IMAGE));
-
-                mCategories = new Categories(id, name, image);
-                mListCategories.add(mCategories);
-                cursor.moveToNext();
+            for (Categories categorie : db.getCategoriesByDay(day)) {
+                mListCategories.add(categorie);
+                Log.d("Requas",categorie.getName());
             }
-
             mAdapter = new MainAdapter(MainActivity.this, mListCategories);
             return null;
         }

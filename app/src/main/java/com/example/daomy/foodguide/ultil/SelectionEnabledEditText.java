@@ -1,13 +1,14 @@
 package com.example.daomy.foodguide.ultil;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
 
 /**
  * Created by WIN7 on 05/22/2015.
  */
-public class SelectionEnabledEditText extends android.support.v7.widget.AppCompatEditText {
+public class SelectionEnabledEditText extends AppCompatEditText {
     public SelectionEnabledEditText(Context context) {
         super(context);
     }

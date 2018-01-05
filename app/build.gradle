@@ -35,6 +35,9 @@ dependencies {
     implementation 'com.parse.bolts:bolts-android:1.2.0'
     implementation fileTree(dir: 'libs', include: 'Parse-1.9.2.jar')
     implementation 'com.google.android.gms:play-services:7.0.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.google.code.gson:gson:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
