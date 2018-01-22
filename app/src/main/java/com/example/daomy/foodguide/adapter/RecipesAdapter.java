@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.model.Recipes;
@@ -23,9 +24,9 @@ public class RecipesAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context mContext;
     private Recipes mRecipes;
-    private ArrayList<Recipes> mList;
+    private List<Recipes> mList;
 
-    public RecipesAdapter(Context context, ArrayList<Recipes> list) {
+    public RecipesAdapter(Context context,List<Recipes> list) {
         this.mContext = context;
         this.mList = list;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -60,8 +61,11 @@ public class RecipesAdapter extends BaseAdapter {
         }
 
         mRecipes = mList.get(position);
-        Picasso.with(mContext).load(mRecipes.getImage()).into(viewHolder.imgRecipes);
-        viewHolder.tvNameRecipes.setText(mRecipes.getName());
+        Picasso.with(mContext)
+                .load(mRecipes.getmImage())
+                .fit()
+                .into(viewHolder.imgRecipes);
+        viewHolder.tvNameRecipes.setText(mRecipes.getmName());
 
         return convertView;
     }

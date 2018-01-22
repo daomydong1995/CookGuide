@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.daomy.foodguide.api.APIClient;
+import com.example.daomy.foodguide.api.APIService;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -51,6 +55,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.example.daomy.foodguide.activity.R;
@@ -59,23 +64,24 @@ import com.example.daomy.foodguide.model.Recipes;
 import com.example.daomy.foodguide.ultil.ContractsDatabase;
 import com.example.daomy.foodguide.ultil.ControllerDatabase;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class RecipesDetailActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
-    Recipes mRecipes, mRecipesMore;
+    Recipes mRecipes,mRecipesMore;
     String ingredients, cacBuocThucHien,codeYoutube="";
     ImageView imageOnTop, btnCalendar,imgPlay;
     TextView tvTime, tvServing, tvKcal;
-
     LinearLayout layoutNguyenLieu, layoutHuongDan;
     com.example.daomy.foodguide.model.Calendar mCalendar;
     ControllerDatabase db;
     Boolean pressed = false;
-
     private FacebookCallback<LoginResult> mCallBack;
     ShareDialog shareDialog;
     CallbackManager mCallBackManager;
-
-    ArrayList<Recipes> mList = new ArrayList<>();
+    List<Recipes> mListMoreRecipes = new ArrayList<>();
     MoreRecipesAdapter mMoreRecipesAdapter;
     TwoWayView mTwoWayView;
     FloatingActionButton mFloatingActionButton;
@@ -123,69 +129,23 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
                 .build();
 
         Intent it = getIntent();
-        mRecipes = (Recipes) it.getSerializableExtra("Congthuc");
-
+        mRecipes = (Recipes) it.getParcelableExtra("Congthuc");
         loadComponent();
-
-
-        //////check item already//////
-//        Cursor cursor = db.checkFavouriteRecipesAlready(mRecipes.getId());
-//        cursor.moveToFirst();
-//        while (!cursor.isAfterLast()) {
-//            itemAlready = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_FAVOURITE_ID_RECIPES));
-//            cursor.moveToNext();
-//        }
-//
-//        if (itemAlready != 0){
-//            pressed = true;
-//            mFloatingActionButton.setIcon(R.mipmap.ic_action_favorite_pressed);
-//        }
-
         getDetailRecipes(mRecipes);
-
-
-
-        // Listview horizontal
-        TwoWayView listView = (TwoWayView) findViewById(R.id.lvItems);
-        Cursor c = db.getListRecipes();
-        c.moveToFirst();
-        while (!c.isAfterLast()){
-            mRecipesMore = new Recipes();
-            mRecipesMore.setId(c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_ID)));
-            mRecipesMore.setImage(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_IMAGE)));
-            mRecipesMore.setName(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_NAME)));
-            mRecipesMore.setTime(c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_TIME)));
-            mRecipesMore.setServing(c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_SERVING)));
-            mRecipesMore.setKcal(c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_KCAL)));
-            mRecipesMore.setIngredients(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_INGREDIENTS)));
-            mRecipesMore.setInstruction(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_INSTRUCTION)));
-            mRecipesMore.setmCodeVideo(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_CODE_YOUTUBE)));
-            mList.add(mRecipesMore);
-            c.moveToNext();
-        }
-        mMoreRecipesAdapter = new MoreRecipesAdapter(RecipesDetailActivity.this, mList);
-        listView.setAdapter(mMoreRecipesAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mFloatingActionButton.setIcon(R.mipmap.ic_action_favorite);
-                mRecipesMore = mList.get(position);
-                getDetailRecipes(mRecipesMore);
-            }
-        });
+        addMoreRecipes();
 
         btnCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar cal = Calendar.getInstance();
-                int idCalendar = mRecipes.getId();
-                String nameCalendar = mRecipes.getName();
+                int idCalendar = mRecipes.getmId();
+                String nameCalendar = mRecipes.getmName();
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 int month = cal.get(Calendar.MONTH) + 1;
                 int year = cal.get(Calendar.YEAR);
                 int hours = cal.get(Calendar.HOUR_OF_DAY);
                 int minute = cal.get(Calendar.MINUTE);
-                int endTime = mRecipes.getTime();
+                int endTime = mRecipes.getmTime();
                 mCalendar = new com.example.daomy.foodguide.model.Calendar(idCalendar, nameCalendar, day, month, year, hours, minute, endTime);
                 long save = db.insertRecipesToCalendar(mCalendar);
                 if (save <= 0) {
@@ -205,6 +165,36 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
 
     }
 
+    private void addMoreRecipes() {
+        APIService service = APIClient.getClient().create(APIService.class);
+        Call<List<Recipes>> listCall = service.getRecipes(4);
+        listCall.enqueue(new Callback<List<Recipes>>() {
+            @Override
+            public void onResponse(Call<List<Recipes>> call, Response<List<Recipes>> response) {
+                mListMoreRecipes = response.body();
+                for(Recipes re:mListMoreRecipes)
+                Log.d("Repounr" ,re.getmName());
+                TwoWayView listView = (TwoWayView) findViewById(R.id.lvItems);
+                mMoreRecipesAdapter = new MoreRecipesAdapter(RecipesDetailActivity.this, mListMoreRecipes);
+                listView.setAdapter(mMoreRecipesAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mFloatingActionButton.setIcon(R.mipmap.ic_action_favorite);
+                        mRecipesMore = mListMoreRecipes.get(position);
+                        getDetailRecipes(mRecipesMore);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<List<Recipes>> call, Throwable t) {
+                Log.d("Repounr" ,t.getMessage());
+            }
+        });
+
+    }
+
     private void loadComponent() {
         layoutNguyenLieu = (LinearLayout) findViewById(R.id.NguyenLieuLayout);
         layoutHuongDan = (LinearLayout) findViewById(R.id.HuongDanLayout);
@@ -219,15 +209,13 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
 
     private void getDetailRecipes(final Recipes recipes) {
         itemAlready = 0;
-        ingredients = recipes.getIngredients();
-        cacBuocThucHien = recipes.getInstruction();
-        tvTime.setText(getFormatTime(recipes.getTime()));
-        tvServing.setText(recipes.getServing() + " người");
-        tvKcal.setText(recipes.getKcal() + " kcal");
+        ingredients = recipes.getmIngredients();
+        cacBuocThucHien = recipes.getmInstruction();
+        tvTime.setText(getFormatTime(recipes.getmTime()));
+        tvServing.setText(recipes.getmServing() + " người");
+        tvKcal.setText(recipes.getmKcal() + " kcal");
         codeYoutube = recipes.getmCodeVideo()+"";
-        getSupportActionBar().setTitle(recipes.getName());
-
-
+        getSupportActionBar().setTitle(recipes.getmName());
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(Color.WHITE)
                 .borderWidthDp(3)
@@ -236,12 +224,10 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
                 .build();
 
         Picasso.with(RecipesDetailActivity.this)
-                .load(recipes.getImage())
+                .load(recipes.getmImage())
                 .fit()
                 .transform(transformation)
                 .into(imageOnTop);
-
-
 
         String a[] = ingredients.split(",");
         for (int i = 0; i < a.length; i++) {
@@ -266,7 +252,7 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
             layoutHuongDan.addView(tv);
         }
 
-        Cursor cursor = db.checkFavouriteRecipesAlready(recipes.getId());
+        Cursor cursor = db.checkFavouriteRecipesAlready(recipes.getmId());
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             itemAlready = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_FAVOURITE_ID_RECIPES));
@@ -286,11 +272,11 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
                 if (pressed) {
                     // Khi them mon an
                     mFloatingActionButton.setIcon(R.mipmap.ic_action_favorite_pressed);
-                    db.addFavouriteRecipes(recipes.getId(), recipes.getName(), recipes.getImage(), String.valueOf(recipes.getTime()), String.valueOf(recipes.getServing()));
+                    db.addFavouriteRecipes(recipes.getmId(), recipes.getmName(), recipes.getmImage(), String.valueOf(recipes.getmTime()), String.valueOf(recipes.getmServing()));
                 }else {
                     // Khi bo mon an
                     mFloatingActionButton.setIcon(R.mipmap.ic_action_favorite);
-                    db.DelFavouriteRecipesItem(recipes.getId());
+                    db.DelFavouriteRecipesItem(recipes.getmId());
                 }
 
             }
@@ -301,9 +287,9 @@ public class RecipesDetailActivity extends AppCompatActivity implements GoogleAp
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent content = new ShareLinkContent.Builder()
                     .setContentUrl(Uri.parse("https://www.facebook.com/daomydong1995"))
-                    .setImageUrl(Uri.parse(mRecipes.getImage()))
-                    .setContentTitle(mRecipes.getName())
-                    .setContentDescription("Click để xem công thức làm món " + mRecipes.getName())
+                    .setImageUrl(Uri.parse(mRecipes.getmImage()))
+                    .setContentTitle(mRecipes.getmName())
+                    .setContentDescription("Click để xem công thức làm món " + mRecipes.getmName())
                     .build();
             shareDialog.show(content);
         }

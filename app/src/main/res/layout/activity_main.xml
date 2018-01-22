@@ -16,14 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/action_favorite"
-        android:background="#a38cf5">
+        android:background="#afc6fa">
 
 
         <ListView
             android:id="@+id/gvMain"
             style="@android:style/Widget.ListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
 
 

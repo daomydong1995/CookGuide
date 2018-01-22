@@ -40,8 +40,6 @@ public class ControllerDatabase {
             //mDatabase.openDatabase();
         } catch (IOException e) {
             e.printStackTrace();
-       // } catch (SQLException e) {
-         //   e.printStackTrace();
         }
         mSQLiteDatabase = mDatabase.getWritableDatabase();
         return null;
@@ -51,100 +49,9 @@ public class ControllerDatabase {
         mDatabase.close();
     }
 
-    public List<Categories> getCategoriesByDay(String day) {
-        Call<List<Categories>> listCall = service.getCateByDay(day);
-        listCall.enqueue(new Callback<List<Categories>>() {
-            @Override
-            public void onResponse(Call<List<Categories>> call, Response<List<Categories>> response) {
-                if(response.code() == 200){
-                    categories = response.body();
-                    for(Categories c:categories)
-                        Log.d("Requas",c.getName());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Categories>> call, Throwable t) {
-
-            }
-        });
-        for(Categories c:categories)
-            Log.d("Requas",c.getName());
-        return categories;
-    }
-
-    // Lấy danh sách công thức món ăn theo món ăn
-    public Cursor getRecipesByCategory(String category) {
-        String sql = "SELECT "
-                + ContractsDatabase.KEY_RECIPES_ID + ", "
-                + ContractsDatabase.KEY_RECIPES_NAME + ", "
-                + ContractsDatabase.KEY_RECIPES_IMAGE + ", "
-                + ContractsDatabase.KEY_RECIPES_TIME + ", "
-                + ContractsDatabase.KEY_RECIPES_SERVING + ", "
-                + ContractsDatabase.KEY_RECIPES_KCAL + ", "
-                + ContractsDatabase.KEY_RECIPES_INGREDIENTS + ", "
-                + ContractsDatabase.KEY_RECIPES_INSTRUCTION+ ", "
-                + ContractsDatabase.KEY_RECIPES_CODE_YOUTUBE
-                + " FROM " + ContractsDatabase.TABLE_RECIPES
-                + " WHERE " + ContractsDatabase.KEY_RECIPES_ID_CATEGORY + " = \"" + category + "\"";
-        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
-        return cursor;
-    }
 
     // Lấy danh sách địa điểm quán ăn theo món ăn
-    public Cursor getRestaurantByCategory(String category) {
-        String sql = "SELECT "
-                + ContractsDatabase.KEY_RESTAURANT_ID + ", "
-                + ContractsDatabase.KEY_RESTAURANT_NAME + ", "
-                + ContractsDatabase.KEY_RESTAURANT_IMAGE + ", "
-                + ContractsDatabase.KEY_RESTAURANT_ADDRESS + ", "
-                + ContractsDatabase.KEY_RESTAURANT_PRICE + ", "
-                + ContractsDatabase.KEY_RESTAURANT_PHONE + ", "
-                + ContractsDatabase.KEY_RESTAURANT_DISTRICT + ", "
-                + ContractsDatabase.KEY_RESTAURANT_LOCATION + ", "
-                + ContractsDatabase.KEY_RESTAURANT_TIME
-                + " FROM " + ContractsDatabase.TABLE_RESTAURANT
-                + " WHERE " + ContractsDatabase.KEY_RESTAURANT_ID_CATEGORY + " = \"" + category + "\"";
-        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
-        return cursor;
-    }
 
-    // Lấy danh sách công thức tìm kiếm theo tên
-    public Cursor getRecipesByName(String name) {
-        String sql = "SELECT "
-                + ContractsDatabase.KEY_RECIPES_ID + ", "
-                + ContractsDatabase.KEY_RECIPES_NAME + ", "
-                + ContractsDatabase.KEY_RECIPES_IMAGE + ", "
-                + ContractsDatabase.KEY_RECIPES_TIME + ", "
-                + ContractsDatabase.KEY_RECIPES_SERVING + ", "
-                + ContractsDatabase.KEY_RECIPES_KCAL + ", "
-                + ContractsDatabase.KEY_RECIPES_INGREDIENTS + ", "
-                + ContractsDatabase.KEY_RECIPES_INSTRUCTION
-                + " FROM " + ContractsDatabase.TABLE_RECIPES
-                + " WHERE " + ContractsDatabase.KEY_RECIPES_NAME
-                + " LIKE \"%" + name + "%\"";
-        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
-        return cursor;
-    }
-
-    // Lấy danh sách địa điểm tìm kiếm theo tên
-    public Cursor getRestaurantByName(String name) {
-        String sql = "SELECT "
-                + ContractsDatabase.KEY_RESTAURANT_ID + ", "
-                + ContractsDatabase.KEY_RESTAURANT_NAME + ", "
-                + ContractsDatabase.KEY_RESTAURANT_IMAGE + ", "
-                + ContractsDatabase.KEY_RESTAURANT_ADDRESS + ", "
-                + ContractsDatabase.KEY_RESTAURANT_PRICE + ", "
-                + ContractsDatabase.KEY_RESTAURANT_PHONE + ", "
-                + ContractsDatabase.KEY_RESTAURANT_DISTRICT + ", "
-                + ContractsDatabase.KEY_RESTAURANT_LOCATION + ", "
-                + ContractsDatabase.KEY_RESTAURANT_TIME
-                + " FROM " + ContractsDatabase.TABLE_RESTAURANT
-                + " WHERE " + ContractsDatabase.KEY_RESTAURANT_NAME
-                + " LIKE \"%" + name + "%\"";
-        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
-        return cursor;
-    }
 
     public Cursor getRecipesById(int id) {
         String sql = "SELECT "
@@ -216,6 +123,7 @@ public class ControllerDatabase {
                     + " = " + serving;
             sql = sql2;
         }
+        Log.d("QueryFou",sql);
         Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
         return cursor;
     }

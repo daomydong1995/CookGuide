@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,10 +17,16 @@ import java.util.ArrayList;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.adapter.FavoriteAdapter;
+import com.example.daomy.foodguide.api.APIClient;
+import com.example.daomy.foodguide.api.APIService;
 import com.example.daomy.foodguide.model.ListViewItem;
 import com.example.daomy.foodguide.model.Recipes;
 import com.example.daomy.foodguide.ultil.ContractsDatabase;
 import com.example.daomy.foodguide.ultil.ControllerDatabase;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FavouriteRecipesActivity extends AppCompatActivity {
     private ListView resultListView;
@@ -82,24 +89,25 @@ public class FavouriteRecipesActivity extends AppCompatActivity {
     }
 
     private void getRecipesById(ListViewItem lt) {
-        Cursor cursor = db.getFavouriteRecipesById(lt.getId());
-        if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_ID));
-            String name = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_NAME));
-            String image = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_IMAGE));
-            int time = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_TIME));
-            int serving = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_SERVING));
-            int kcal = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_KCAL));
-            String ingredients = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_INGREDIENTS));
-            String instruction = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_INSTRUCTION));
-            String code = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_CODE_YOUTUBE));
+        APIService service = APIClient.getClient().create(APIService.class);
+        Call<Recipes> recipesCall = service.getRecipesById(lt.getId());
+        Log.d("RequereId",lt.getId()+"");
+        recipesCall.enqueue(new Callback<Recipes>() {
+            @Override
+            public void onResponse(Call<Recipes> call, Response<Recipes> response) {
+                mRecipes = (Recipes) response.body();
+                Log.d("RequereId",mRecipes.getmName());
+                Intent intent = new Intent(FavouriteRecipesActivity.this, RecipesDetailActivity.class);
+                intent.putExtra("Congthuc",mRecipes);
+                startActivity(intent);
+            }
 
-            mRecipes = new Recipes(id, name, image, time, serving, kcal, ingredients, instruction,code);
-        }
+            @Override
+            public void onFailure(Call<Recipes> call, Throwable t) {
+                Log.d("RequereId",t.getMessage());
+            }
+        });
 
-        Intent intent = new Intent(FavouriteRecipesActivity.this, RecipesDetailActivity.class);
-        intent.putExtra("Congthuc", mRecipes);
-        startActivity(intent);
     }
 
 

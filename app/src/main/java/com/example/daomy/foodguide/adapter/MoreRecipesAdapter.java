@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.model.ListViewItem;
@@ -25,10 +26,10 @@ import com.example.daomy.foodguide.model.Recipes;
 public class MoreRecipesAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context context;
-    private ArrayList<Recipes> lvdata;
+    private List<Recipes> lvdata;
     private Recipes mRecipes;
 
-    public MoreRecipesAdapter(Context context, ArrayList<Recipes> lvdata) {
+    public MoreRecipesAdapter(Context context, List<Recipes> lvdata) {
         this.context = context;
         this.lvdata = lvdata;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -72,7 +73,7 @@ public class MoreRecipesAdapter extends BaseAdapter {
                 .build();
 
         Picasso.with(context)
-                .load(mRecipes.getImage())
+                .load(mRecipes.getmImage())
                 .fit()
                 .transform(transformation)
                 .into(viewHolder.imvItem);

@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -30,6 +29,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.daomy.foodguide.api.APIClient;
+import com.example.daomy.foodguide.api.APIService;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -41,6 +46,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.adapter.MainAdapter;
@@ -48,14 +54,18 @@ import com.example.daomy.foodguide.model.Categories;
 import com.example.daomy.foodguide.ultil.ContractsDatabase;
 import com.example.daomy.foodguide.ultil.ControllerDatabase;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class MainActivity extends AppCompatActivity {
     private ListView mListView;
     private LinearLayout mMessage;
-
+    APIService service = APIClient.getClient().create(APIService.class);
     private ControllerDatabase db;
     private Categories mCategories;
-    private ArrayList<Categories> mListCategories = new ArrayList<>();
+    private List<Categories> mListCategories = new ArrayList<>();
     private MainAdapter mAdapter;
 
     private String day;
@@ -153,14 +163,14 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, HelpActivity.class);
                 startActivity(intent);
                 mFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.favorite1));
-                new LoadingData(MainActivity.this).execute();
+                LoadingData();
             }
 
 
         } else {
             //code if the app HAS run before
             mFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.favorite1));
-            new LoadingData(MainActivity.this).execute();
+                LoadingData();
         }
     }
 
@@ -260,42 +270,25 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class LoadingData extends AsyncTask<Void, Void, Void> {
+    public void LoadingData()  {
+       Call<List<Categories>> listCall = service.getCateByDay(day);
+       listCall.enqueue(new Callback<List<Categories>>() {
+           @Override
+           public void onResponse(Call<List<Categories>> call, Response<List<Categories>> response) {
+               mMessage.setVisibility(View.INVISIBLE);
+               mListCategories = response.body();
+               mAdapter = new MainAdapter(MainActivity.this,mListCategories);
+               mListView.setAdapter(mAdapter);
 
-        private ProgressDialog progressDialog;
+           }
 
-        public LoadingData(MainActivity activity) {
-            progressDialog = new ProgressDialog(activity);
-        }
+           @Override
+           public void onFailure(Call<List<Categories>> call, Throwable t) {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog.setMessage("Dữ liệu đang được tải, vui lòng chờ một chút...");
-            progressDialog.setCancelable(false);
-            progressDialog.setTitle("Loading...");
-            progressDialog.show();
-        }
+           }
+       });
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            mMessage.setVisibility(View.INVISIBLE);
-            for (Categories categorie : db.getCategoriesByDay(day)) {
-                mListCategories.add(categorie);
-                Log.d("Requas",categorie.getName());
-            }
-            mAdapter = new MainAdapter(MainActivity.this, mListCategories);
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            mListView.setAdapter(mAdapter);
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-        }
     }
 
     @Override

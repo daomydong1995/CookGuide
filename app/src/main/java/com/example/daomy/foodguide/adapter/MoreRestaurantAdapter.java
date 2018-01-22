@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.model.Recipes;
@@ -25,10 +26,10 @@ public class MoreRestaurantAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private Context context;
-    private ArrayList<Restaurant> lvdata;
+    private List<Restaurant> lvdata;
     private Restaurant mRestaurant;
 
-    public MoreRestaurantAdapter(Context context, ArrayList<Restaurant> lvdata) {
+    public MoreRestaurantAdapter(Context context, List<Restaurant> lvdata) {
         this.context = context;
         this.lvdata = lvdata;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -72,7 +73,7 @@ public class MoreRestaurantAdapter extends BaseAdapter {
                 .build();
 
         Picasso.with(context)
-                .load(mRestaurant.getImage())
+                .load(mRestaurant.getmImage())
                 .fit()
                 .transform(transformation)
                 .into(viewHolder.imvItem);

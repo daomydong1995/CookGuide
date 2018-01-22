@@ -25,9 +25,15 @@ import java.util.List;
 import java.util.Locale;
 
 import com.example.daomy.foodguide.activity.R;
+import com.example.daomy.foodguide.api.APIClient;
+import com.example.daomy.foodguide.api.APIService;
 import com.example.daomy.foodguide.model.Recipes;
 import com.example.daomy.foodguide.ultil.ContractsDatabase;
 import com.example.daomy.foodguide.ultil.ControllerDatabase;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CalendarActivity extends AppCompatActivity implements WeekView.EventClickListener, WeekView.MonthChangeListener, WeekView.EventLongPressListener {
     private WeekView mWeekView;
@@ -161,24 +167,27 @@ public class CalendarActivity extends AppCompatActivity implements WeekView.Even
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
 //        Toast.makeText(CalendarActivity.this, "Clicked " + event.getName(), Toast.LENGTH_SHORT).show();
         String id = String.valueOf(event.getId());
-        Cursor c = db.getRecipesById(Integer.parseInt(id));
-        if (c != null && c.moveToFirst()) {
-            int idR = c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_ID));
-            String name = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_NAME));
-            String image = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_IMAGE));
-            int time = c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_TIME));
-            int serving = c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_SERVING));
-            int kcal = c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_KCAL));
-            String ingredients = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_INGREDIENTS));
-            String instruction = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_INSTRUCTION));
-            String code = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RECIPES_CODE_YOUTUBE));
+        int Inid = Integer.parseInt(id);
+        Log.d("iddd",Inid+"");
+        APIService service = APIClient.getClient().create(APIService.class);
+        Call<Recipes> recipesCall = service.getRecipesById(Inid);
+        recipesCall.enqueue(new Callback<Recipes>() {
+            @Override
+            public void onResponse(Call<Recipes> call, Response<Recipes> response) {
+                mRecipes = (Recipes) response.body();
+                Log.d("RequereId",mRecipes.getmName());
+                Intent intent = new Intent(CalendarActivity.this, RecipesDetailActivity.class);
+                intent.putExtra("Congthuc",mRecipes);
+                startActivity(intent);
+            }
 
-            mRecipes = new Recipes(idR, name, image, time, serving, kcal, ingredients, instruction,code);
-        }
+            @Override
+            public void onFailure(Call<Recipes> call, Throwable t) {
+                Log.d("RequereId",t.getMessage());
+            }
+        });
 
-        Intent intent = new Intent(this, RecipesDetailActivity.class);
-        intent.putExtra("Congthuc", mRecipes);
-        startActivity(intent);
+
     }
 
     @Override

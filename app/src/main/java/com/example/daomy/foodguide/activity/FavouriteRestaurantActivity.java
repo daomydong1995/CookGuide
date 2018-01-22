@@ -16,10 +16,16 @@ import java.util.ArrayList;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.adapter.FavoriteAdapter;
+import com.example.daomy.foodguide.api.APIClient;
+import com.example.daomy.foodguide.api.APIService;
 import com.example.daomy.foodguide.model.ListViewItem;
 import com.example.daomy.foodguide.model.Restaurant;
 import com.example.daomy.foodguide.ultil.ContractsDatabase;
 import com.example.daomy.foodguide.ultil.ControllerDatabase;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class FavouriteRestaurantActivity extends AppCompatActivity {
@@ -109,25 +115,23 @@ public class FavouriteRestaurantActivity extends AppCompatActivity {
     }
 
     private void getRestaurantById(ListViewItem lt) {
-        Cursor c = db.getFavouriteRestaurantById(lt.getId());
-        if (c != null && c.moveToFirst()) {
-            int idR = c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_ID));
-            String name = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_NAME));
-            String image = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_IMAGE));
-            String address = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_ADDRESS));
-            String price = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_PRICE));
-            String phone = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_PHONE));
-            String district = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_DISTRICT));
-            String location = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_LOCATION));
-            String time = c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_TIME));
+        final APIService service = APIClient.getClient().create(APIService.class);
+        Call<Restaurant> restaurantCall = service.getRestaurantById(lt.getId());
+        restaurantCall.enqueue(new Callback<Restaurant>() {
+            @Override
+            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
+                mRestaurant = response.body();
+                Intent intent = new Intent(FavouriteRestaurantActivity.this, RestaurantDetailActivity.class);
+                intent.putExtra("Diadiem", mRestaurant);
+                startActivity(intent);
+            }
 
+            @Override
+            public void onFailure(Call<Restaurant> call, Throwable t) {
 
-            mRestaurant = new Restaurant(idR, name, image, address, price, phone, district, location, time);
-        }
+            }
+        });
 
-        Intent intent = new Intent(FavouriteRestaurantActivity.this, RestaurantDetailActivity.class);
-        intent.putExtra("Diadiem", mRestaurant);
-        startActivity(intent);
     }
 
     @Override

@@ -1,11 +1,20 @@
 package com.example.daomy.foodguide.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by PDNghiaDev on 4/15/2015.
  */
 public class Categories {
+    @Expose
+    @SerializedName("mIDCategory")
     private String mIDCategory;
+    @Expose
+    @SerializedName("mName")
     private String mName;
+    @Expose
+    @SerializedName("mImage")
     private String mImage;
 
     public Categories() {

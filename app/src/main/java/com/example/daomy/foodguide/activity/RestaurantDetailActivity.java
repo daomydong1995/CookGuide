@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.daomy.foodguide.api.APIClient;
+import com.example.daomy.foodguide.api.APIService;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -40,12 +43,17 @@ import com.squareup.picasso.Transformation;
 import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.adapter.MoreRestaurantAdapter;
 import com.example.daomy.foodguide.model.Restaurant;
 import com.example.daomy.foodguide.ultil.ContractsDatabase;
 import com.example.daomy.foodguide.ultil.ControllerDatabase;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class RestaurantDetailActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
@@ -64,11 +72,9 @@ public class RestaurantDetailActivity extends AppCompatActivity implements Googl
 
     Boolean pressed = false;
 
-    ArrayList<Restaurant> mList = new ArrayList<>();
+    List<Restaurant> mList ;
     MoreRestaurantAdapter mMoreRestaurantAdapter;
     TwoWayView mTwoWayView;
-    Restaurant mRestaurantMore;
-
     ControllerDatabase db;
     int itemAlready;
     FloatingActionButton mFloatingActionButton;
@@ -83,10 +89,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements Googl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.restaurant_detail_layout);
-
+        mList= new ArrayList<>();
         db = new ControllerDatabase(this);
         db.open();
-
+        addListRetaurent();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -110,7 +116,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements Googl
 
         loadComponent();
         Intent it = getIntent();
-        mRestaurant = (Restaurant) it.getSerializableExtra("Diadiem");
+        mRestaurant = (Restaurant) it.getParcelableExtra("Diadiem");
 
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -127,53 +133,60 @@ public class RestaurantDetailActivity extends AppCompatActivity implements Googl
             public void onClick(View v) {
                 Intent intent = new Intent(
                         ContactsContract.Intents.SHOW_OR_CREATE_CONTACT,
-                        Uri.parse("tel:" + mRestaurant.getPhone()));
+                        Uri.parse("tel:" + mRestaurant.getmPhone()));
                 intent.putExtra(ContactsContract.Intents.EXTRA_FORCE_CREATE, true);
                 startActivity(intent);
             }
         });
 
         // Listview horizontal
-        TwoWayView listView = (TwoWayView) findViewById(R.id.lvItems);
-        Cursor c = db.getListRestaurant();
-        c.moveToFirst();
-        while (!c.isAfterLast()){
-            mRestaurantMore = new Restaurant();
-            mRestaurantMore.setId(c.getInt(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_ID)));
-            mRestaurantMore.setImage(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_IMAGE)));
-            mRestaurantMore.setName(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_NAME)));
-            mRestaurantMore.setAddress(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_ADDRESS)));
-            mRestaurantMore.setPrice(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_PRICE)));
-            mRestaurantMore.setPhone(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_PHONE)));
-            mRestaurantMore.setDistrict(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_DISTRICT)));
-            mRestaurantMore.setLocation(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_LOCATION)));
-            mRestaurantMore.setTime(c.getString(c.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_TIME)));
 
-            mList.add(mRestaurantMore);
-            c.moveToNext();
-        }
-        mMoreRestaurantAdapter = new MoreRestaurantAdapter(RestaurantDetailActivity.this, mList);
-        listView.setAdapter(mMoreRestaurantAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    }
+
+    private void addListRetaurent() {
+
+        final APIService service = APIClient.getClient().create(APIService.class);
+        Call<List<Restaurant>> listCall = service.getRestaurants(5);
+        final TwoWayView listView = (TwoWayView) findViewById(R.id.lvItems);
+        listCall.enqueue(new Callback<List<Restaurant>>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mRestaurantMore = mList.get(position);
-                getDetailRestaurant(mRestaurantMore);
+            public void onResponse(Call<List<Restaurant>> call, Response<List<Restaurant>> response) {
+
+                mList = response.body();
+                mMoreRestaurantAdapter = new MoreRestaurantAdapter(RestaurantDetailActivity.this, mList);
+                listView.setAdapter(mMoreRestaurantAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        getDetailRestaurant(mList.get(position));
+
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<List<Restaurant>> call, Throwable t) {
+
             }
         });
+
     }
 
     private void getDetailRestaurant(final Restaurant restaurant) {
         itemAlready = 0;
-        tenMonAn.setText(restaurant.getName());
-        diaChi.setText(restaurant.getAddress());
-        gioMoCua.setText(restaurant.getTime());
-        giaCa.setText(restaurant.getPrice());
-        soDienThoai.setText(restaurant.getPhone());
+        tenMonAn.setText(restaurant.getmName());
+        diaChi.setText(restaurant.getmAddress());
+        gioMoCua.setText(restaurant.getmTime());
+        giaCa.setText(restaurant.getmPrice());
+        soDienThoai.setText(restaurant.getmPhone());
 
-        getSupportActionBar().setTitle(restaurant.getName());
+        getSupportActionBar().setTitle(restaurant.getmName());
 
-        Picasso.with(this).load(restaurant.getLocation()).into(banDo);
+        Picasso.with(this)
+                .load(restaurant.getmLocation())
+                .skipMemoryCache()
+                .into(banDo);
 
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(Color.WHITE)
@@ -183,13 +196,14 @@ public class RestaurantDetailActivity extends AppCompatActivity implements Googl
                 .build();
 
         Picasso.with(this)
-                .load(mRestaurant.getImage())
+                .load(restaurant.getmImage())
+                .skipMemoryCache()
                 .fit()
                 .transform(transformation)
                 .into(avatar);
 
         //////check item already//////
-        Cursor cursor = db.checkFavouriteRestaurantAlready(restaurant.getId());
+        Cursor cursor = db.checkFavouriteRestaurantAlready(restaurant.getmId());
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             itemAlready = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_FAVOURITE_ID_RESTAURANT));
@@ -209,11 +223,11 @@ public class RestaurantDetailActivity extends AppCompatActivity implements Googl
                 if (pressed) {
                     // Khi them mon an
                     mFloatingActionButton.setIcon(R.mipmap.ic_action_favorite_pressed);
-                    db.addFavouriteRestaurant(restaurant.getId(), restaurant.getName(), restaurant.getImage(), restaurant.getAddress(), restaurant.getPrice());
+                    db.addFavouriteRestaurant(restaurant.getmId(), restaurant.getmName(), restaurant.getmImage(), restaurant.getmAddress(), restaurant.getmPrice());
                 } else {
                     // Khi bo mon an
                     mFloatingActionButton.setIcon(R.mipmap.ic_action_favorite);
-                    db.DelFavouriteRestaurantItem(restaurant.getId());
+                    db.DelFavouriteRestaurantItem(restaurant.getmId());
                 }
 
             }
@@ -236,8 +250,8 @@ public class RestaurantDetailActivity extends AppCompatActivity implements Googl
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent content = new ShareLinkContent.Builder()
                     .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=alarm.weather.pdnghiadev.com.weatheralarm"))
-                    .setImageUrl(Uri.parse(mRestaurant.getImage()))
-                    .setContentTitle(mRestaurant.getName())
+                    .setImageUrl(Uri.parse(mRestaurant.getmImage()))
+                    .setContentTitle(mRestaurant.getmName())
                     .setContentDescription("Click để xem địa điểm quán ở đâu")
                     .build();
             shareDialog.show(content);

@@ -2,11 +2,14 @@ package com.example.daomy.foodguide.api;
 
 
 import com.example.daomy.foodguide.model.Categories;
+import com.example.daomy.foodguide.model.Recipes;
+import com.example.daomy.foodguide.model.Restaurant;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -15,16 +18,25 @@ import retrofit2.http.Query;
 
 public interface APIService {
 
-//    @Headers("Accept: application/json")
-//    @GET("ad-listing")
-//    Call<ReponseChoTot> GetZoom(@Query("region") String region,
-//                                @Query("cg") String cg,
-//                                @Query("o") int o,
-//                                @Query("st") String st,
-//                                @Query("q") String q);
-//    @GET("ad-listing/{list_id}")
-//    Call<MyPojo> GetMyPojoCall(@Path("list_id") long list_id);
     @GET("/categories/getbyday")
     Call<List<Categories>> getCateByDay(@Query("day") String day);
 
+    @GET("/recipes/getRecipesbyCa")
+    Call<List<Recipes>> getRecipesByCategory(@Query("id_category")String id_category);
+    @GET("/recipes/getRecipesById/{id}")
+    Call<Recipes> getRecipesById(@Path("id") int id);
+    @GET("/recipes/getRecipes")
+    Call<List<Recipes>> getRecipes(@Query("sum") int sum);
+
+    @GET("/recipes/getRecipesByTimeServing")
+    Call<List<Recipes>> getRecipesByTimeServing(@Query("tag_name") String name,@Query("time") int time,@Query("serving") int serving);
+
+
+    //////Restaurent
+    @GET("/restaurant/getRestaurantByCa")
+    Call<List<Restaurant>> getRestaurantCa(@Query("id_category")String id_category);
+    @GET("/restaurant/getRestaurant")
+    Call<List<Restaurant>> getRestaurants (@Query("sum") int sum);
+    @GET("/restaurant/getRestaurantById/{id}")
+    Call<Restaurant> getRestaurantById(@Path("id") int id);
 }

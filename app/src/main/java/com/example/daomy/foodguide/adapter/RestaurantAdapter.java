@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.model.Restaurant;
@@ -23,9 +24,9 @@ public class RestaurantAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context mContext;
     private Restaurant mRestaurant;
-    private ArrayList<Restaurant> mList;
+    private List<Restaurant> mList;
 
-    public RestaurantAdapter(Context context, ArrayList<Restaurant> list) {
+    public RestaurantAdapter(Context context, List<Restaurant> list) {
         this.mContext = context;
         this.mList = list;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -51,17 +52,20 @@ public class RestaurantAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.restaurant_grid_item, null);
-            viewHolder.imgRestaurant = (ImageView) convertView.findViewById(R.id.imageRestaurant);
-            viewHolder.tvNameRestaurant = (TextView) convertView.findViewById(R.id.textNameRestaurant);
+            convertView = inflater.inflate(R.layout.recipes_grid_item, null);
+            viewHolder.imgRestaurant = (ImageView) convertView.findViewById(R.id.imageRecipes);
+            viewHolder.tvNameRestaurant = (TextView) convertView.findViewById(R.id.textNameRecipes);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         mRestaurant = mList.get(position);
-        Picasso.with(mContext).load(mRestaurant.getImage()).into(viewHolder.imgRestaurant);
-        viewHolder.tvNameRestaurant.setText(mRestaurant.getName());
+        Picasso.with(mContext)
+                .load(mRestaurant.getmImage())
+                .fit()
+                .into(viewHolder.imgRestaurant);
+        viewHolder.tvNameRestaurant.setText(mRestaurant.getmName());
 
         return convertView;
     }

@@ -80,4 +80,9 @@ public class ContractsDatabase {
     public static final String KEY_FAVOURITE_ID_RECIPES = "idRecipes";
     public static final String KEY_FAVOURITE_TIME = "time";
     public static final String KEY_FAVOURITE_SERVING = "serving";
+
+    //DataJson
+    public static final String HOST =" http://192.168.2.102" ;
+    public static final String POST =  ":8080/";
+    public static final String GET_CATEGORIES_BY_DAY = "/categories/getbyday";
 }

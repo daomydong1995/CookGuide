@@ -234,9 +234,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Các món khác"
+                    android:text="Các địa điểm khác"
                     android:textColor="@color/title_recipes"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <org.lucasr.twowayview.TwoWayView
                     android:id="@+id/lvItems"

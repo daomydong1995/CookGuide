@@ -13,10 +13,13 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.example.daomy.foodguide.api.APIClient;
+import com.example.daomy.foodguide.api.APIService;
 import com.github.amlcurran.showcaseview.ApiUtils;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.adapter.RecipesAdapter;
@@ -26,20 +29,24 @@ import com.example.daomy.foodguide.model.Restaurant;
 import com.example.daomy.foodguide.ultil.ContractsDatabase;
 import com.example.daomy.foodguide.ultil.ControllerDatabase;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class CategoryActivity extends AppCompatActivity {
     private GridView mGridView;
-    private ArrayList<Recipes> mListRecipes = new ArrayList<Recipes>();
+    private List<Recipes> mListRecipes = new ArrayList<Recipes>();
     private Recipes mRecipes;
     private RecipesAdapter mAdapterRecipes;
     private ControllerDatabase db;
     private String IDCategory;
-    private ArrayList<Restaurant> mListRestaurant = new ArrayList<Restaurant>();
+    private List<Restaurant> mListRestaurant = new ArrayList<>();
     private Restaurant mRestaurant;
     private RestaurantAdapter mAdapterRestaurant;
     private TextView mMessage;
     private final ApiUtils apiUtils = new ApiUtils();
-
+    APIService service = APIClient.getClient().create(APIService.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,42 +65,16 @@ public class CategoryActivity extends AppCompatActivity {
         IDCategory = intent.getStringExtra("IDCategory");
         String name = intent.getStringExtra("NameCategory");
         getSupportActionBar().setTitle(name);
-
         getRecipes();
-        if (mListRecipes.size() > 0) {
-            mMessage.setVisibility(View.INVISIBLE);
-            mAdapterRecipes = new RecipesAdapter(CategoryActivity.this, mListRecipes);
-            mGridView.setAdapter(mAdapterRecipes);
-
-            mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    mRecipes = mListRecipes.get(position);
-                    Intent intent = new Intent(CategoryActivity.this, RecipesDetailActivity.class);
-                    intent.putExtra("Congthuc", mRecipes);
-                    startActivity(intent);
-                }
-            });
-        }
-
         findViewById(R.id.btnRecipes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListRecipes.clear();
                 getRecipes();
-                if (mListRecipes.size() > 0) {
-                    mMessage.setVisibility(View.INVISIBLE);
-                    mAdapterRecipes = new RecipesAdapter(CategoryActivity.this, mListRecipes);
-                    mGridView.setAdapter(mAdapterRecipes);
-                } else {
-                    mListRestaurant.clear();
-                    mAdapterRestaurant = new RestaurantAdapter(CategoryActivity.this, mListRestaurant);
-                    mGridView.setAdapter(mAdapterRestaurant);
-                    mMessage.setVisibility(View.VISIBLE);
-                }
                 mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mGridView.removeAllViews();
                         mRecipes = mListRecipes.get(position);
                         Intent intent = new Intent(CategoryActivity.this, RecipesDetailActivity.class);
                         intent.putExtra("Congthuc", mRecipes);
@@ -108,16 +89,6 @@ public class CategoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mListRestaurant.clear();
                 getRestaurant();
-                if (mListRestaurant.size() > 0) {
-                    mMessage.setVisibility(View.INVISIBLE);
-                    mAdapterRestaurant = new RestaurantAdapter(CategoryActivity.this, mListRestaurant);
-                    mGridView.setAdapter(mAdapterRestaurant);
-                } else {
-                    mListRecipes.clear();
-                    mAdapterRecipes = new RecipesAdapter(CategoryActivity.this, mListRecipes);
-                    mGridView.setAdapter(mAdapterRecipes);
-                    mMessage.setVisibility(View.VISIBLE);
-                }
                 mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -140,44 +111,61 @@ public class CategoryActivity extends AppCompatActivity {
 
 
     private void getRestaurant() {
-        Cursor cursor = db.getRestaurantByCategory(IDCategory);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            int id = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_ID));
-            String name = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_NAME));
-            String image = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_IMAGE));
-            String address = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_ADDRESS));
-            String price = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_PRICE));
-            String phone = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_PHONE));
-            String district = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_DISTRICT));
-            String location = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_LOCATION));
-            String time = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RESTAURANT_TIME));
 
+            Call<List<Restaurant>> listCall = service.getRestaurantCa(IDCategory);
+            listCall.enqueue(new Callback<List<Restaurant>>() {
+                @Override
+                public void onResponse(Call<List<Restaurant>> call, Response<List<Restaurant>> response) {
+                        mListRestaurant = response.body();
+                        mMessage.setVisibility(View.INVISIBLE);
+                        mAdapterRestaurant = new RestaurantAdapter(CategoryActivity.this, mListRestaurant);
+                        mGridView.setAdapter(mAdapterRestaurant);
+                        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            mRestaurant = mListRestaurant.get(position);
+                            Intent intent = new Intent(CategoryActivity.this, RestaurantDetailActivity.class);
+                            intent.putExtra("Diadiem", mRestaurant);
+                            startActivity(intent);
+                        }
+                    });
 
-            mRestaurant = new Restaurant(id, name, image, address, price, phone, district, location, time);
-            mListRestaurant.add(mRestaurant);
-            cursor.moveToNext();
-        }
+                }
+
+                @Override
+                public void onFailure(Call<List<Restaurant>> call, Throwable t) {
+
+                }
+            });
+
     }
 
     private void getRecipes() {
-        Cursor cursor = db.getRecipesByCategory(IDCategory);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            int id = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_ID));
-            String name = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_NAME));
-            String image = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_IMAGE));
-            int time = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_TIME));
-            int serving = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_SERVING));
-            int kcal = cursor.getInt(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_KCAL));
-            String ingredients = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_INGREDIENTS));
-            String instruction = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_INSTRUCTION));
-            String code = cursor.getString(cursor.getColumnIndex(ContractsDatabase.KEY_RECIPES_CODE_YOUTUBE));
+            Call<List<Recipes>> listCall = service.getRecipesByCategory(IDCategory);
+            listCall.enqueue(new Callback<List<Recipes>>() {
+                @Override
+                public void onResponse(Call<List<Recipes>> call, Response<List<Recipes>> response) {
+                    mListRecipes =response.body();
+                    mMessage.setVisibility(View.INVISIBLE);
+                    mAdapterRecipes = new RecipesAdapter(CategoryActivity.this, mListRecipes);
+                    mGridView.setAdapter(mAdapterRecipes);
+                    mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            mRecipes = mListRecipes.get(position);
+                            Intent intent = new Intent(CategoryActivity.this, RecipesDetailActivity.class);
+                            intent.putExtra("Congthuc", mRecipes);
+                            startActivity(intent);
+                        }
+                    });
+                }
 
-            mRecipes = new Recipes(id, name, image, time, serving, kcal, ingredients, instruction,code);
-            mListRecipes.add(mRecipes);
-            cursor.moveToNext();
-        }
+                @Override
+                public void onFailure(Call<List<Recipes>> call, Throwable t) {
+
+                }
+            });
+
     }
 
     @Override

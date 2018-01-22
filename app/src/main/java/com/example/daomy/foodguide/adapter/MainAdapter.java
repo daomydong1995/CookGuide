@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.model.Categories;
@@ -22,9 +23,9 @@ public class MainAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context mContext;
     private Categories mCategories;
-    private ArrayList<Categories> mList;
+    private List<Categories> mList;
 
-    public MainAdapter(Context context, ArrayList<Categories> list) {
+    public MainAdapter(Context context, List<Categories> list) {
         this.mContext = context;
         this.mList = list;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

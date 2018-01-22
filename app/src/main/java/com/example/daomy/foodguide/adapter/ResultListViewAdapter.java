@@ -13,7 +13,7 @@ import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.example.daomy.foodguide.activity.R;
 import com.example.daomy.foodguide.model.ListViewItem;
@@ -25,9 +25,9 @@ public class ResultListViewAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context context;
     private ListViewItem listViewItem;
-    private ArrayList<ListViewItem> lvdata;
+    private List<ListViewItem> lvdata;
 
-    public ResultListViewAdapter(Context context, ArrayList<ListViewItem> lvdata) {
+    public ResultListViewAdapter(Context context, List<ListViewItem> lvdata) {
         this.context = context;
         this.lvdata = lvdata;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
